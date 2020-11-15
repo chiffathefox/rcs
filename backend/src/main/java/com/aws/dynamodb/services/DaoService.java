@@ -10,7 +10,7 @@ public interface DaoService {
 
   Map<String, Object> createRobotConfiguration(Map<String, Object> robotConfiguration);
 
-  Map<String, String> updateRobotConfiguration(Map<String, String> robotConfiguration);
+  Map<String, Object> updateRobotConfiguration(Map<String, Object> robotConfiguration);
 
   void deleteRobotConfiguration(String configurationId);
 }

@@ -101,8 +101,16 @@ public class DaoServiceImpl implements DaoService {
   }
 
   @Override
-  public Map<String, String> updateRobotConfiguration(Map<String, String> robotConfiguration) {
-    return null;
+  public Map<String, Object> updateRobotConfiguration(Map<String, Object> robotConfiguration) {
+    long version1 = Long.parseLong(robotConfiguration.getOrDefault("version", 1).toString());
+    robotConfiguration.put("version", ++version1);
+    final Map<String, AttributeValue> newObject = convertToItem(robotConfiguration);
+
+    dynamoDB.putItem("rcs-robot-configurations", newObject);
+
+    dynamoDB.putItem("rcs-configuration-changelogs", newObject);
+
+    return robotConfiguration;
   }
 
   @Override

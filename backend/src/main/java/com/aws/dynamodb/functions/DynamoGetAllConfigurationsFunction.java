@@ -12,10 +12,6 @@ public class DynamoGetAllConfigurationsFunction
 
   private final DaoService daoService = DaoServiceImpl.service();
 
-  public List<Map<String, String>> getConfigurations() {
-    return daoService.getConfigurations();
-  }
-
   @Override
   public List<Map<String, String>> handleRequest(Void unused, Context context) {
     return daoService.getConfigurations();

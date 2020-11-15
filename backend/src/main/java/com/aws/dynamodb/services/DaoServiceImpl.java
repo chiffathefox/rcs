@@ -2,6 +2,8 @@ package com.aws.dynamodb.services;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.QueryRequest;
+import com.amazonaws.services.dynamodbv2.model.QueryResult;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.aws.dynamodb.manager.DynamoDBManager;
@@ -30,7 +32,26 @@ public class DaoServiceImpl implements DaoService {
   public List<Map<String, String>> getChangeLogs(String configurationId, String version) {
     log.debug("getChangeLogs [configurationId={" + configurationId +
         "}, version={" + version + "}]");
-    return null;
+    final AttributeValue idValue = new AttributeValue();
+    idValue.setN(configurationId);
+    final AttributeValue versionValue = new AttributeValue();
+    versionValue.setN(version);
+
+    QueryRequest queryRequest = new QueryRequest()
+        .withTableName("rcs-configuration-changelogs")
+        .withKeyConditionExpression("id = :id AND version = :version")
+        .withExpressionAttributeValues(Map.of(":id", idValue, ":version", versionValue));
+
+    QueryResult result = dynamoDB.query(queryRequest);
+
+    return convertItems(result.getItems());
+  }
+
+  private List<Map<String, String>> convertItems(List<Map<String, AttributeValue>> items) {
+    return items.stream()
+        .map(map -> map.entrySet().stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, this::convertAttributeValue))
+        ).collect(Collectors.toList());
   }
 
   @Override
@@ -51,13 +72,10 @@ public class DaoServiceImpl implements DaoService {
   @Override
   public List<Map<String, String>> getConfigurations() {
     ScanRequest scanRequest = new ScanRequest()
-        .withTableName("robot_configurations");
+        .withTableName("rcs-robot-configurations");
 
     ScanResult result = dynamoDB.scan(scanRequest);
-    return result.getItems().stream()
-        .map(map -> map.entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, this::convertAttributeValue))
-        ).collect(Collectors.toList());
+    return convertItems(result.getItems());
   }
 
   private String convertAttributeValue(Map.Entry<String, AttributeValue> entry) {

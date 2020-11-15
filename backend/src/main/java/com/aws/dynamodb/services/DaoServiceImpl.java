@@ -9,10 +9,16 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class DaoServiceImpl implements DaoService {
   private static final DynamoDB dynamoDB = DynamoDBManager.dynamoDB();
+  private static DaoService service;
 
-  @Override
-  public List<Map<String, String>> getConfigurations() {
-    return null;
+  public static synchronized DaoService service() {
+
+    if (service == null) {
+      log.info("Instantiating service");
+      service = new DaoServiceImpl();
+    }
+
+    return service;
   }
 
   @Override
@@ -35,5 +41,10 @@ public class DaoServiceImpl implements DaoService {
   @Override
   public void deleteRobotConfiguration(String configurationId) {
 
+  }
+
+  @Override
+  public List<Map<String, String>> getConfigurations() {
+    return List.of(Map.of("something1", "something2"));
   }
 }

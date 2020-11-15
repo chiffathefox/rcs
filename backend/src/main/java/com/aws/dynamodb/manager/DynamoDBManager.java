@@ -1,6 +1,6 @@
 package com.aws.dynamodb.manager;
 
-import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
@@ -17,8 +17,9 @@ public class DynamoDBManager {
       log.info("Instantiating mapper");
 
       AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
-          .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(
-              "http://localhost:8000", "eu-west-1"))
+//          .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(
+//              "http://localhost:8000", "eu-west-1"))
+          .withRegion(Regions.EU_WEST_2)
           .build();
 
       dynamoDB = new DynamoDB(client);

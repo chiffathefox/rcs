@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 public class DynamoGetAllConfigurationsFunction
-    implements RequestHandler<Void, List<Map<String, String>>> {
+    implements RequestHandler<Void, List<Map<String, Object>>> {
 
   private final DaoService daoService = DaoServiceImpl.service();
 
   @Override
-  public List<Map<String, String>> handleRequest(Void unused, Context context) {
+  public List<Map<String, Object>> handleRequest(Void unused, Context context) {
     return daoService.getConfigurations();
   }
 }

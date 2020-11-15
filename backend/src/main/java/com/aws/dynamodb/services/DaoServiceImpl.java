@@ -29,7 +29,7 @@ public class DaoServiceImpl implements DaoService {
   }
 
   @Override
-  public List<Map<String, String>> getChangeLogs(String configurationId, String version) {
+  public List<Map<String, Object>> getChangeLogs(String configurationId, String version) {
     log.debug("getChangeLogs [configurationId={" + configurationId +
         "}, version={" + version + "}]");
     final AttributeValue idValue = new AttributeValue();
@@ -47,7 +47,7 @@ public class DaoServiceImpl implements DaoService {
     return convertItems(result.getItems());
   }
 
-  private List<Map<String, String>> convertItems(List<Map<String, AttributeValue>> items) {
+  private List<Map<String, Object>> convertItems(List<Map<String, AttributeValue>> items) {
     return items.stream()
         .map(map -> map.entrySet().stream()
             .collect(Collectors.toMap(Map.Entry::getKey, this::convertAttributeValue))
@@ -70,7 +70,7 @@ public class DaoServiceImpl implements DaoService {
   }
 
   @Override
-  public List<Map<String, String>> getConfigurations() {
+  public List<Map<String, Object>> getConfigurations() {
     ScanRequest scanRequest = new ScanRequest()
         .withTableName("rcs-robot-configurations");
 
@@ -78,7 +78,7 @@ public class DaoServiceImpl implements DaoService {
     return convertItems(result.getItems());
   }
 
-  private String convertAttributeValue(Map.Entry<String, AttributeValue> entry) {
+  private Object convertAttributeValue(Map.Entry<String, AttributeValue> entry) {
     AttributeValue source = entry.getValue();
     if (Objects.isNull(source)) {
       return "";
@@ -87,9 +87,9 @@ public class DaoServiceImpl implements DaoService {
     if (source.getS() != null) {
       return source.getS();
     } else if (source.getBOOL() != null) {
-      return source.getBOOL().toString();
+      return source.getBOOL();
     } else if (source.getN() != null) {
-      return source.getN();
+      return Double.valueOf(source.getN());
     }
 
     return "";

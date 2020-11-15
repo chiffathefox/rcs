@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 public class DynamoGetChangeLogsFunction
-    implements RequestHandler<ChangeLogRequestDTO, List<Map<String, String>>> {
+    implements RequestHandler<ChangeLogRequestDTO, List<Map<String, Object>>> {
 
   private final DaoService daoService = DaoServiceImpl.service();
 
   @Override
-  public List<Map<String, String>> handleRequest(ChangeLogRequestDTO changeLogRequestDTO,
+  public List<Map<String, Object>> handleRequest(ChangeLogRequestDTO changeLogRequestDTO,
                                                  Context context) {
     return daoService.getChangeLogs(changeLogRequestDTO.getId(), changeLogRequestDTO.getVersion());
   }

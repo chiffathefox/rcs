@@ -24,6 +24,10 @@ public class DaoServiceImpl implements DaoService {
           "([eE][+-]?(\\p{Digit}+))?)|(\\.((\\p{Digit}+))([eE][+-]?(\\p{Digit}+))?)|(((0[xX](\\p{XDigit}" +
           "+)(\\.)?)|(0[xX](\\p{XDigit}+)?(\\.)(\\p{XDigit}+)))[pP][+-]?(\\p{Digit}+)))[fFdD]?))[\\x00-\\x20]*";
   private static final Pattern pattern = Pattern.compile(doubleRegExp);
+  public static final String ROBOT_CONFIGURATION_CHANGELOGS_TABLE = "rcs-configuration-changelogs";
+  public static final String ROBOT_CONFIGURATION_TABLE = "rcs-robot-configurations";
+  public static final String VERSION_ATTRIBUTE = "version";
+
   private static DaoService service;
 
   public static synchronized DaoService service() {
@@ -46,7 +50,7 @@ public class DaoServiceImpl implements DaoService {
     versionValue.setN(version);
 
     QueryRequest queryRequest = new QueryRequest()
-        .withTableName("rcs-configuration-changelogs")
+        .withTableName(ROBOT_CONFIGURATION_CHANGELOGS_TABLE)
         .withKeyConditionExpression("id = :id AND version = :version")
         .withExpressionAttributeValues(Map.of(":id", idValue, ":version", versionValue));
 
@@ -66,11 +70,11 @@ public class DaoServiceImpl implements DaoService {
 
     AttributeValue version = new AttributeValue();
     version.setN(String.valueOf(1));
-    stringAttributeValueMap.put("version", version);
+    stringAttributeValueMap.put(VERSION_ATTRIBUTE, version);
 
-    dynamoDB.putItem("rcs-robot-configurations", stringAttributeValueMap);
+    dynamoDB.putItem(ROBOT_CONFIGURATION_TABLE, stringAttributeValueMap);
 
-    dynamoDB.putItem("rcs-configuration-changelogs", stringAttributeValueMap);
+    dynamoDB.putItem(ROBOT_CONFIGURATION_CHANGELOGS_TABLE, stringAttributeValueMap);
 
     return convertItem(stringAttributeValueMap);
   }
@@ -102,13 +106,14 @@ public class DaoServiceImpl implements DaoService {
 
   @Override
   public Map<String, Object> updateRobotConfiguration(Map<String, Object> robotConfiguration) {
-    long version1 = Long.parseLong(robotConfiguration.getOrDefault("version", 1).toString());
-    robotConfiguration.put("version", ++version1);
+    long version1 =
+        Long.parseLong(robotConfiguration.getOrDefault(VERSION_ATTRIBUTE, 1).toString());
+    robotConfiguration.put(VERSION_ATTRIBUTE, ++version1);
     final Map<String, AttributeValue> newObject = convertToItem(robotConfiguration);
 
-    dynamoDB.putItem("rcs-robot-configurations", newObject);
+    dynamoDB.putItem(ROBOT_CONFIGURATION_TABLE, newObject);
 
-    dynamoDB.putItem("rcs-configuration-changelogs", newObject);
+    dynamoDB.putItem(ROBOT_CONFIGURATION_CHANGELOGS_TABLE, newObject);
 
     return robotConfiguration;
   }
@@ -120,7 +125,7 @@ public class DaoServiceImpl implements DaoService {
   @Override
   public List<Map<String, Object>> getConfigurations() {
     ScanRequest scanRequest = new ScanRequest()
-        .withTableName("rcs-robot-configurations");
+        .withTableName(ROBOT_CONFIGURATION_TABLE);
 
     ScanResult result = dynamoDB.scan(scanRequest);
     return convertItems(result.getItems());

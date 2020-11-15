@@ -8,7 +8,7 @@ public interface DaoService {
 
   List<Map<String, Object>> getChangeLogs(String configurationId, String version);
 
-  Map<String, String> createRobotConfiguration(Map<String, String> robotConfiguration);
+  Map<String, Object> createRobotConfiguration(Map<String, Object> robotConfiguration);
 
   Map<String, String> updateRobotConfiguration(Map<String, String> robotConfiguration);
 

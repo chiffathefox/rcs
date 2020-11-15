@@ -7,15 +7,23 @@ import com.amazonaws.services.dynamodbv2.model.QueryResult;
 import com.amazonaws.services.dynamodbv2.model.ScanRequest;
 import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.aws.dynamodb.manager.DynamoDBManager;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j;
 
 @Log4j
 public class DaoServiceImpl implements DaoService {
   private static final AmazonDynamoDB dynamoDB = DynamoDBManager.dynamoDB();
+  private static final String regExp =
+      "[\\x00-\\x20]*[+-]?(((((\\p{Digit}+)(\\.)?((\\p{Digit}+)?)" +
+          "([eE][+-]?(\\p{Digit}+))?)|(\\.((\\p{Digit}+))([eE][+-]?(\\p{Digit}+))?)|(((0[xX](\\p{XDigit}" +
+          "+)(\\.)?)|(0[xX](\\p{XDigit}+)?(\\.)(\\p{XDigit}+)))[pP][+-]?(\\p{Digit}+)))[fFdD]?))[\\x00-\\x20]*";
+  private static final Pattern pattern = Pattern.compile(regExp);
   private static DaoService service;
 
   public static synchronized DaoService service() {
@@ -47,16 +55,49 @@ public class DaoServiceImpl implements DaoService {
     return convertItems(result.getItems());
   }
 
-  private List<Map<String, Object>> convertItems(List<Map<String, AttributeValue>> items) {
-    return items.stream()
-        .map(map -> map.entrySet().stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, this::convertAttributeValue))
-        ).collect(Collectors.toList());
+  @Override
+  public Map<String, Object> createRobotConfiguration(Map<String, Object> robotConfiguration) {
+    final Map<String, AttributeValue> stringAttributeValueMap = convertToItem(robotConfiguration);
+
+    long id = new Date().getTime();
+    AttributeValue idN = new AttributeValue();
+    idN.setN(String.valueOf(id));
+    stringAttributeValueMap.put("id", idN);
+
+    AttributeValue version = new AttributeValue();
+    version.setN(String.valueOf(1));
+    stringAttributeValueMap.put("version", version);
+
+    dynamoDB.putItem("rcs-robot-configurations", stringAttributeValueMap);
+
+    dynamoDB.putItem("rcs-configuration-changelogs", stringAttributeValueMap);
+
+    return convertItem(stringAttributeValueMap);
   }
 
-  @Override
-  public Map<String, String> createRobotConfiguration(Map<String, String> robotConfiguration) {
-    return null;
+  private Map<String, AttributeValue> convertToItem(Map<String, Object> items) {
+    return items.entrySet().stream()
+        .collect(Collectors.toMap(Map.Entry::getKey, this::convertToAttributeValue));
+  }
+
+  private AttributeValue convertToAttributeValue(Map.Entry<String, Object> entry) {
+    Object source = entry.getValue();
+    AttributeValue attributeValue = new AttributeValue();
+    if (Objects.isNull(source)) {
+      return attributeValue;
+    }
+
+    Matcher m = pattern.matcher(source.toString());
+
+    if (m.matches()) {
+      attributeValue.setN(source.toString());
+    } else if (source.getClass() == Boolean.class) {
+      attributeValue.setBOOL((Boolean) source);
+    } else {
+      attributeValue.setS(source.toString());
+    }
+
+    return attributeValue;
   }
 
   @Override
@@ -76,6 +117,17 @@ public class DaoServiceImpl implements DaoService {
 
     ScanResult result = dynamoDB.scan(scanRequest);
     return convertItems(result.getItems());
+  }
+
+  private List<Map<String, Object>> convertItems(List<Map<String, AttributeValue>> items) {
+    return items.stream()
+        .map(this::convertItem)
+        .collect(Collectors.toList());
+  }
+
+  private Map<String, Object> convertItem(Map<String, AttributeValue> item) {
+    return item.entrySet().stream()
+        .collect(Collectors.toMap(Map.Entry::getKey, this::convertAttributeValue));
   }
 
   private Object convertAttributeValue(Map.Entry<String, AttributeValue> entry) {

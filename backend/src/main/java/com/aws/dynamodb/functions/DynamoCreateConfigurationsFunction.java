@@ -7,12 +7,12 @@ import com.aws.dynamodb.services.DaoServiceImpl;
 import java.util.Map;
 
 public class DynamoCreateConfigurationsFunction
-    implements RequestHandler<Map<String, String>, Map<String, String>> {
+    implements RequestHandler<Map<String, Object>, Map<String, Object>> {
 
   private final DaoService daoService = DaoServiceImpl.service();
 
   @Override
-  public Map<String, String> handleRequest(Map<String, String> robotConfiguration,
+  public Map<String, Object> handleRequest(Map<String, Object> robotConfiguration,
                                            Context context) {
     return daoService.createRobotConfiguration(robotConfiguration);
   }

@@ -19,11 +19,11 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class DaoServiceImpl implements DaoService {
   private static final AmazonDynamoDB dynamoDB = DynamoDBManager.dynamoDB();
-  private static final String regExp =
+  private static final String doubleRegExp =
       "[\\x00-\\x20]*[+-]?(((((\\p{Digit}+)(\\.)?((\\p{Digit}+)?)" +
           "([eE][+-]?(\\p{Digit}+))?)|(\\.((\\p{Digit}+))([eE][+-]?(\\p{Digit}+))?)|(((0[xX](\\p{XDigit}" +
           "+)(\\.)?)|(0[xX](\\p{XDigit}+)?(\\.)(\\p{XDigit}+)))[pP][+-]?(\\p{Digit}+)))[fFdD]?))[\\x00-\\x20]*";
-  private static final Pattern pattern = Pattern.compile(regExp);
+  private static final Pattern pattern = Pattern.compile(doubleRegExp);
   private static DaoService service;
 
   public static synchronized DaoService service() {
@@ -37,7 +37,7 @@ public class DaoServiceImpl implements DaoService {
   }
 
   @Override
-  public List<Map<String, Object>> getChangeLogs(String configurationId, String version) {
+  public Map<String, Object> getChangeLog(String configurationId, String version) {
     log.debug("getChangeLogs [configurationId={" + configurationId +
         "}, version={" + version + "}]");
     final AttributeValue idValue = new AttributeValue();
@@ -52,7 +52,7 @@ public class DaoServiceImpl implements DaoService {
 
     QueryResult result = dynamoDB.query(queryRequest);
 
-    return convertItems(result.getItems());
+    return convertItem(result.getItems().get(0));
   }
 
   @Override
@@ -114,8 +114,7 @@ public class DaoServiceImpl implements DaoService {
   }
 
   @Override
-  public void deleteRobotConfiguration(String configurationId) {
-
+  public void deleteRobotConfiguration(long configurationId) {
   }
 
   @Override

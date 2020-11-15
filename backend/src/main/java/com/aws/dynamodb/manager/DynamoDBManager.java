@@ -3,28 +3,25 @@ package com.aws.dynamodb.manager;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import lombok.extern.log4j.Log4j;
 
 @Log4j
 public class DynamoDBManager {
 
-  private static DynamoDB dynamoDB;
+  private static AmazonDynamoDB client;
 
-  public static synchronized DynamoDB dynamoDB() {
+  public static synchronized AmazonDynamoDB dynamoDB() {
 
-    if (dynamoDB == null) {
+    if (client == null) {
       log.info("Instantiating mapper");
 
-      AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
+      client = AmazonDynamoDBClientBuilder.standard()
 //          .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(
 //              "http://localhost:8000", "eu-west-1"))
-          .withRegion(Regions.EU_WEST_2)
+          .withRegion(Regions.EU_NORTH_1)
           .build();
-
-      dynamoDB = new DynamoDB(client);
     }
 
-    return dynamoDB;
+    return client;
   }
 }

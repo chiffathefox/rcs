@@ -14,10 +14,8 @@ public class DynamoDeleteConfigurationsFunction
   private final DaoService daoService = DaoServiceImpl.service();
 
   @Override
-  public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request,
-                                                    Context context) {
-    final long configurationId =
-        Long.parseLong(request.getPathParameters().get("configuration_id"));
+  public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
+    final String configurationId = request.getPathParameters().get("configuration_id");
     daoService.deleteRobotConfiguration(configurationId);
 
     APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();

@@ -1,16 +1,10 @@
 package com.aws.dynamodb.services;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.QueryRequest;
-import com.amazonaws.services.dynamodbv2.model.QueryResult;
-import com.amazonaws.services.dynamodbv2.model.ScanRequest;
-import com.amazonaws.services.dynamodbv2.model.ScanResult;
+import com.amazonaws.services.dynamodbv2.model.*;
 import com.aws.dynamodb.manager.DynamoDBManager;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -119,7 +113,34 @@ public class DaoServiceImpl implements DaoService {
   }
 
   @Override
-  public void deleteRobotConfiguration(long configurationId) {
+  public void deleteRobotConfiguration(String configurationId) {
+      final AttributeValue idValue = new AttributeValue();
+      idValue.setN(configurationId);
+
+      dynamoDB.deleteItem(ROBOT_CONFIGURATION_TABLE, Map.of("id", idValue));
+
+      List<AttributeValue> listVersions = findAllVersionsByConfigId(idValue);
+
+      listVersions.forEach(version ->
+          dynamoDB.deleteItem(ROBOT_CONFIGURATION_CHANGELOGS_TABLE, Map.of("id", idValue, "version", version))
+      );
+
+  }
+
+  private List<AttributeValue> findAllVersionsByConfigId(AttributeValue idValue){
+
+      QueryRequest queryRequest = new QueryRequest()
+              .withTableName(ROBOT_CONFIGURATION_CHANGELOGS_TABLE)
+              .withKeyConditionExpression("id = :id")
+              .withExpressionAttributeValues(Map.of(":id", idValue))
+              .withProjectionExpression(VERSION_ATTRIBUTE);
+
+      QueryResult result = dynamoDB.query(queryRequest);
+
+      return result.getItems().stream()
+              .map(Map::values)
+              .flatMap(Collection::stream)
+              .collect(Collectors.toList());
   }
 
   @Override

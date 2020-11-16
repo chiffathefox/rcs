@@ -12,5 +12,5 @@ public interface DaoService {
 
   Map<String, Object> updateRobotConfiguration(Map<String, Object> robotConfiguration);
 
-  void deleteRobotConfiguration(long configurationId);
+  void deleteRobotConfiguration(String configurationId);
 }

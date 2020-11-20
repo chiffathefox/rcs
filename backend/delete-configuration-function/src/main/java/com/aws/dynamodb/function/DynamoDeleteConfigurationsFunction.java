@@ -1,4 +1,4 @@
-package com.aws.dynamodb.functions;
+package com.aws.dynamodb.function;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;

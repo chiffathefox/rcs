@@ -2,6 +2,13 @@
 Robot Configuration System
 
 ## Backend
+Multimodular application  
+Tech stack:  
+* Java 11;
+* AWS SDK;
+* AWS Layer;
+* AWS Lambda;
+* AWS DynamoDB.
 ### Compile
 Execute following command in the root directory
 `mvn clean package shade:shade`

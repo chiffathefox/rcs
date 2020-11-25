@@ -2,24 +2,50 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>com.aws</groupId>
     <artifactId>dynamodb</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
+
+    <name>dynamodb</name>
+    <description>Demo project for DynamoDB</description>
+    <url>https://github.com/chiffathefox/rcs</url>
+
+    <issueManagement>
+        <url>https://github.com/chiffathefox/rcs/issues</url>
+        <system>GitHub Issues</system>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/chiffathefox/rcs</url>
+        <connection>scm:git:git://github.com/chiffathefox/rcs.git</connection>
+        <developerConnection>scm:git:git@github.com:chiffathefox/rcs.git</developerConnection>
+    </scm>
+
     <modules>
-        <module>all-configurations-function</module>
         <module>service-layer</module>
+        <module>all-configurations-function</module>
         <module>create-configuration-function</module>
         <module>delete-configuration-function</module>
         <module>update-configuration-function</module>
         <module>get-changelog-function</module>
     </modules>
-    <name>dynamodb</name>
-    <description>Demo project for DynamoDB</description>
 
     <properties>
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.optimize>true</java.optimize>
+        <java.debug>true</java.debug>
     </properties>
 
     <dependencies>
@@ -68,6 +94,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
+                    <optimize>${java.optimize}</optimize>
+                    <debug>${java.debug}</debug>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>

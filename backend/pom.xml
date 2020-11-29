@@ -64,6 +64,11 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-events -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-lambda-java-events</artifactId>
+            <version>3.6.0</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -2,18 +2,14 @@ package com.aws.dynamodb.function;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.aws.dynamodb.services.DaoService;
-import com.aws.dynamodb.services.DaoServiceImpl;
-import java.util.List;
-import java.util.Map;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 
-public class DynamoGetAllConfigurationsFunction
-    implements RequestHandler<Void, List<Map<String, Object>>> {
-
-  private final DaoService daoService = DaoServiceImpl.service();
+public class DynamoGetAllConfigurationsFunction extends AbstractFunction
+    implements RequestHandler<Void, APIGatewayProxyResponseEvent> {
 
   @Override
-  public List<Map<String, Object>> handleRequest(Void unused, Context context) {
-    return daoService.getConfigurations();
+  public APIGatewayProxyResponseEvent handleRequest(Void unused, Context context) {
+    return constructResponse(daoService.getConfigurations());
   }
+
 }

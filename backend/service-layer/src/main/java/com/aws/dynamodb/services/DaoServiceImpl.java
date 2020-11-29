@@ -1,10 +1,17 @@
 package com.aws.dynamodb.services;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.model.*;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.QueryRequest;
+import com.amazonaws.services.dynamodbv2.model.QueryResult;
+import com.amazonaws.services.dynamodbv2.model.ScanRequest;
+import com.amazonaws.services.dynamodbv2.model.ScanResult;
 import com.aws.dynamodb.manager.DynamoDBManager;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -100,8 +107,8 @@ public class DaoServiceImpl implements DaoService {
 
   @Override
   public Map<String, Object> updateRobotConfiguration(Map<String, Object> robotConfiguration) {
-    long version1 =
-        Long.parseLong(robotConfiguration.getOrDefault(VERSION_ATTRIBUTE, 1).toString());
+    double version1 =
+        Double.parseDouble(robotConfiguration.getOrDefault(VERSION_ATTRIBUTE, 1).toString());
     robotConfiguration.put(VERSION_ATTRIBUTE, ++version1);
     final Map<String, AttributeValue> newObject = convertToItem(robotConfiguration);
 

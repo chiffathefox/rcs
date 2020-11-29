@@ -24,8 +24,12 @@ public abstract class AbstractFunction {
     APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
 
     responseEvent.setStatusCode(200);
-    responseEvent.setHeaders(Map.of(HttpHeaders.CONTENT_TYPE,
-        ContentType.APPLICATION_JSON.toString()));
+    responseEvent.setHeaders(
+        Map.of(
+            HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString(),
+            "Access-Control-Allow-Origin", "*"
+        )
+    );
     responseEvent.setBody(gson.toJson(body));
 
     return responseEvent;

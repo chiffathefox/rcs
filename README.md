@@ -13,7 +13,7 @@ Tech stack:
 Execute following command in the root directory
 `mvn clean package shade:shade`
 ### Packaging
-Compress the `service-layer-{project-version}-shaded.jar` in an archive `service-layer.zip` with the structure `java/lib/service-layer-{project-version}-shaded.jar`
+Packaging is done automaticly by Maven Assembly Plugin. Just load `service-layer\target\java.zip` as your layer.
 ### Deploying
 Using CLI:
 1. Upload this ZIP file into the desired S3 bucket.  

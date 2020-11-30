@@ -106,11 +106,13 @@ function Main(props) {
         api.deleteConfiguration(selectedConfigurationId).catch(api.error);
         setConfigurations(newConfigurations);
         setSelectedConfigurationId(null);
+        setSelectedVersion(null);
     }, [
         configurations,
         setConfigurations,
         selectedConfigurationId,
-        setSelectedConfigurationId
+        setSelectedConfigurationId,
+        setSelectedVersion
     ]);
 
     const attributesConfiguration = 

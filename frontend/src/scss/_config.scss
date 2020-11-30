@@ -1,0 +1,9 @@
+
+$app-sep-color: #ccc;
+$app-font-color: #000;
+$app-button-icon-color: #999;
+$app-button-icon-hover-color: darken($app-button-icon-color, 10%);
+$app-button-icon-active-color: darken($app-button-icon-color, 30%);
+$app-button-bg-color: #e6e6e6;
+$app-input-invalid-line-color: red;
+$app-err-bg-color: rgba(255, 0, 0, 0.1);

@@ -1,0 +1,67 @@
+{
+    "env": {
+        "browser": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/all"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaVersion": 10,
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "sourceType": "module",
+        "allowImportExportEverywhere": true
+    },
+    "plugins": [
+        "react",
+        "flowtype"
+    ],
+    "rules": {
+        "indent": [
+            "warn",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-console": "off",
+        "no-unused-vars": "warn",
+        "react/display-name": "warn",
+        "react/default-props-match-prop-types": "off",
+        "react/no-set-state": "off",
+        "react/destructuring-assignment": "off",
+        "react/require-default-props": "off",
+        "react/require-optimization": "warn",
+        "react/prefer-stateless-function": "warn",
+        "react/jsx-no-bind": "warn",
+        "react/no-unused-prop-types": "warn",
+        "react/jsx-indent": "warn",
+        "react/jsx-max-props-per-line": "warn",
+        "react/jsx-sort-props": "warn",
+        "react/jsx-sort-default-props": "warn",
+        "react/jsx-handler-names": "warn",
+        "react/jsx-max-depth": ["warn", { "max": 3 }],
+        "react/sort-comp": "warn",
+        "react/jsx-curly-brace-presence": "warn"
+    },
+    "settings": {
+        "react": {
+            "createClass": "createReactClass",
+            "pragma": "React",
+            "version": "detect",
+            "flowVersion": "0.53"
+        }
+    }
+}

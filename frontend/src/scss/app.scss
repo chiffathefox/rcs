@@ -1,0 +1,174 @@
+
+@import "config";
+
+@keyframes spin {
+    100% { 
+        transform:rotate(360deg); 
+    }
+}
+
+a {
+    color: $app-font-color;
+    text-decoration: none;
+}
+
+.button-icon {
+    padding: 0;
+    margin: 0;
+    transition: all 150ms;
+    outline: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $app-button-icon-color;
+
+    &:hover {
+        color: $app-button-icon-hover-color;
+    }
+
+    &:active {
+        color: $app-button-icon-active-color;
+    }
+
+    &[disabled] {
+        opacity: 0;
+        cursor: default;
+    }
+}
+
+.input {
+    transition: all 200ms;
+    border-radius: 3px;
+    color: $app-font-color;
+    border: none;
+    border-bottom: 1px solid lighten($app-font-color, 60%);
+    background: none;
+    padding: 0.2em;
+
+    &.invalid {
+        border-bottom-color: $app-input-invalid-line-color;
+
+        &:hover, &:focus {
+            border-bottom-color: $app-input-invalid-line-color;
+        }
+    }
+
+    &[disabled] {
+        border-bottom: 1px solid transparent;
+    }
+}
+
+header {
+    padding: 1em 0;
+    margin: 0 1em;
+    border-bottom: 1px solid $app-sep-color;
+
+    .logo {
+        display: flex;
+        align-items: center;
+
+        img {
+            width: 4em;
+        }
+
+        span {
+            margin-left: 1em;
+            font-weight: bold;
+            font-size: 1.5em;
+            color: #555;
+        }
+
+        &.loading {
+            img {
+                animation: spin 4s linear infinite;
+            }
+        }
+    }
+}
+
+.main {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: row;
+
+    .conf-container {
+        padding: 0 0.5em;
+        border-right: 1px solid $app-sep-color;
+
+        &:last-child {
+            border-right: none;
+        }
+    }
+
+    .conf-list {
+        width: 20%;
+
+        .conf-entry {
+            display: block;
+            padding: 0 0.5em;
+
+            p {
+                margin: 0;
+            }
+
+            .id {
+                color: #999;
+                font-size: 0.6em;
+
+                &:before {
+                    content: "#";
+                }
+            }
+
+            &.selected {
+                background-color: darken(#fff, 20%);
+            }
+
+            &:hover {
+                background-color: darken(#fff, 10%);
+            }
+        }
+
+        &.error {
+            background-color: $app-err-bg-color;
+        }
+    }
+
+    .conf-attributes {
+        width: 60%;
+
+        .version-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            span {
+                padding: 0 1ch;
+            }
+        }
+
+        .act-nav {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .attribute {
+            display: grid;
+            grid-template-columns: 28px 0.1fr 1fr;
+            padding: 0.25em 0;
+
+            .input {
+                margin: 0 0.25em;
+            }
+        }
+    }
+
+    .conf-preview {
+        width: 20%;
+
+        img {
+            width: 100%;
+        }
+    }
+}
+
